@@ -4,40 +4,40 @@ provider "aws" {
 }
 
 
-resource "aws_vpc" "vpc_geolocation" {
+resource "aws_vpc" "vpc_battleboat" {
   cidr_block = var.cidr_block
   instance_tenancy = "default"
   enable_dns_support = true
   enable_dns_hostnames = true
   tags = {
-    Name  = "vpc_geolocation"
+    Name  = "vpc_battleboat"
   }
 
 }
 
-resource "aws_internet_gateway" "igw_geolocation" {
-  vpc_id = aws_vpc.vpc_geolocation.id
+resource "aws_internet_gateway" "igw_battleboat" {
+  vpc_id = aws_vpc.vpc_battleboat.id
  
   tags = {
-    Name = "igw_geolocation"
+    Name = "igw_battleboat"
   }
 }
 
 resource "aws_subnet" "public-subnet" {
-    vpc_id            = aws_vpc.vpc_geolocation.id
+    vpc_id            = aws_vpc.vpc_battleboat.id
     cidr_block        = var.cidr_subnet
     availability_zone = var.az
   
     tags = {
-      Name = "public-subnet_geolocation"
+      Name = "public-subnet_battleboat"
     }
   }
 
 resource "aws_route_table" "public-rt" {
-  vpc_id = aws_vpc.vpc_geolocation.id
+  vpc_id = aws_vpc.vpc_battleboat.id
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.igw_geolocation.id
+    gateway_id = aws_internet_gateway.igw_battleboat.id
   }
   tags = {
     Name = "Public-table"
@@ -53,7 +53,7 @@ resource "aws_route_table_association" "rta" {
 
 
 resource "aws_security_group" "sgwebserver" {
-  vpc_id      = aws_vpc.vpcfruits.id
+  vpc_id      = aws_vpc.vpc_battleboat.id
   name        = "webserver-SG"
   description = "Allow SSH access to developers"
   ingress {
@@ -128,7 +128,7 @@ resource "aws_instance" "sonarqube-server" {
     availability_zone = "us-east-1a"
     key_name          = "devops"
        tags = {
-         Name = "build1_server"
+         Name = "build_server"
        }
 
   }

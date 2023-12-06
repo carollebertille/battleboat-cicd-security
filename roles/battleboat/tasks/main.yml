@@ -1,0 +1,133 @@
+# This playbook is used to deploy fake-backend application based on Docker
+
+# build and push builded images
+
+- name: Log into DockerHub
+  docker_login:
+    username: "{{ docker_hub_login }}"
+    password: "{{ docker_hub_password }}"
+  tags:
+    - build
+
+- name: create project directory
+  file:
+    path: "{{ home }}/battleboat"
+    state: directory
+  tags:
+    - build
+    - preprod
+    - prod
+
+- name: copy private key file
+  copy:
+    content: '{{ github_private_key }}'
+    dest: "{{ home }}/.ssh/id_rsa"
+    owner: centos
+  tags:
+    - build
+    - preprod
+    - prod
+
+- name: Retrieve battleboat source code
+  git:
+    repo: "{{ battleboat_source_repo }}"
+    dest: "{{ home }}/battleboat"
+    accept_hostkey: true
+    force: true
+    recursive: false
+    key_file: "{{ home }}/.ssh/id_rsa"
+    version: "{{ battleboat_source_branch }}"
+  tags:
+    - build
+    - preprod
+    - prod
+
+- name: Build image 
+  docker_image:
+    path: "{{ home }}/battleboat/battleboat"
+    name: "{{ docker_hub_login }}/battleboat"
+    tag: "{{ battleboat_image_tag }}"
+  tags:
+    - build
+
+- name: push image 
+  docker_image:
+    path: "{{ home }}/battleboat/battleboat"
+    name: "{{ docker_hub_login }}/battleboat"
+    push: true
+    tag: "{{ battleboat_image_tag }}"
+  tags:
+    - push
+
+
+- name: Remove image on build host
+  docker_image:
+    state: absent
+    name: "{{ docker_hub_login }}/battleboat"
+    tag: "{{ battleboat_image_tag }}"
+  tags:
+    - remove
+
+- name: create volume database
+  file:
+    path: "{{ volume_database }}"
+    state: directory
+  tags:
+    - preprod
+    - prod
+
+# docker network
+- name: Create docker network to interconnect containers
+  docker_network:
+    name: battleboat
+  tags:
+    - preprod
+    - prod
+
+# deploy application
+- name: database
+  docker_container:
+    name: "db-battleboat"
+    hostname: "db-battleboat"
+    image: "mysql:5.7"
+    state: "started"
+    restart_policy: "always"
+    volumes:
+      - "{{ volume_database }}:/var/lib/mysql"
+    env:
+      MYSQL_ROOT_PASSWORD: "root-battleboat"
+      MYSQL_DATABASE: "battleboat"
+      MYSQL_USER: "battleuser"
+      MYSQL_PASSWORD: "battlepass"
+    networks:
+      - name: "battleboat"
+    ports:
+      - "3306:3306"
+  tags:
+    - preprod
+    - prod
+
+# deploy frontend
+
+- name: frontend
+  docker_container:
+    name: "app-battleboat "
+    hostname: "app-battleboat"
+    image: "{{ docker_hub_login }}/battleboat:{{ battleboat_image_tag }}"
+    state: "started"
+    restart_policy: "always"
+    networks:
+      - name: "battleboat"
+    volumes:
+      - "{{ home }}/battleboat/battleboat:/etc/backend/static"
+    env:
+      DATABASE_HOST: "db-battleboat"
+      DATABASE_PORT: "3306"
+      DATABASE_USER: "battleuser"
+      DATABASE_PASSWORD: "battlepass"
+      DATABASE_NAME: "battleboat"
+    ports:
+      - "8181:3000"
+  tags:
+    - preprod
+    - prod

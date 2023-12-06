@@ -2,8 +2,7 @@
   hosts: build 
   become: true 
   vars:
-     #container to scan for vulnerabilities
-    image_to_scan_app: "edennolan2021/geolocation"      #container to scan for vulnerabilities
+    image_to_scan_app: "edennolan2021/battleboat"      #container to scan for vulnerabilities
     image_tag: v1
     clair_server: "172.17.0.1"  #clair server api endpoint
   pre_tasks: 

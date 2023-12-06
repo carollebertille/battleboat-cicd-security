@@ -1,5 +1,5 @@
 /* import shared library */
-@Library('jenkins-shared-library')_
+@Library('cicd-shared-library')_
 
 pipeline {
     agent none
@@ -116,7 +116,7 @@ pipeline {
                }
                stage("Ensure application is deployed in production") {
                   when {
-                      expression { GIT_BRANCH == 'origin/master' }
+                      expression { GIT_BRANCH == 'origin/main' }
                   }
                   steps {
                       sh 'ansible-playbook  -i hosts --vault-password-file vault.key --tags "prod" check_app.yml'
