@@ -6,9 +6,9 @@ The objective of this project is to deploy the battleboat application by creatin
 
 
 
-Infrastructure
+### Infrastructure
 
-  We need 4 servers
+  We need 5 servers
   
  - A main server Jenkins monitor the agent
  - A build server to build, tests, scan  docker images and deploy it, 
