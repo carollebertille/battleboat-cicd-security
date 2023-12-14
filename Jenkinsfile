@@ -21,7 +21,7 @@ pipeline {
             agent any
             environment {
                 VAULTKEY = credentials('vaultkey')
-                DEVOPSKEY = credentials('devopskey')
+                DEVOPSKEY = credentials('devopkey')
             }
             steps {
                 sh 'echo \$VAULTKEY > vault.key'
@@ -129,7 +129,6 @@ pipeline {
     post {
     always {
        script {
-         /* Use slackNotifier.groovy from shared library and provide current build result as parameter */
          clean
          slackNotifier currentBuild.result
      }
@@ -138,39 +137,5 @@ pipeline {
 }
 
             
-/*
-           stage('Find xss vulnerability') {
-            agent { docker { 
-                  image 'gauntlt/gauntlt' 
-                  args ' --entrypoint='
-                  } }
-            steps {
-                sh 'gauntlt --version'
-                sh 'gauntlt xss.attack'
-            }
-          }
-*/
-/*          stage('Find Nmap vulnerability') {
-            agent { docker {
-                  image 'gauntlt/gauntlt'
-                  args '--entrypoint='
-                  } }
-            steps {
-                sh 'gauntlt --version'
-                sh 'gauntlt nmap.attack'
-            }
-          }
 
-
-          stage('Find Os detection vulnerability') {
-            agent { docker {
-                  image 'gauntlt/gauntlt'
-                  args '-v /tmp/attack:${WORKSPACE}/attack --entrypoint='
-                  } }
-            steps {
-                sh 'gauntlt --version'
-                sh 'gauntlt /tmp/os_detection.attack'
-            }
-          }
-*/
     
