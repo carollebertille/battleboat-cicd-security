@@ -62,4 +62,4 @@ Docker, docker-compose, Ansible, Tags, Playbooks, Roles, Galaxy, Jenkins, Shared
 
 + [Source code development](https://github.com/carollebertille/CI-battleboat.git "Source code development")
 + [Shared-library](https://github.com/carollebertille/shared-library.git "Shared-library")
-+ 
+  
