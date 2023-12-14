@@ -1,10 +1,6 @@
 ## Project 
-
-### The context
                 
 The objective of this project is to deploy the battleboat application by creating a complete DevSecOps.
-
-
 
 ### Infrastructure
 
@@ -31,14 +27,14 @@ The objective of this project is to deploy the battleboat application by creatin
 
 ## Description
 
-* This is a complete pipeline CI/CD with jenkins, ansible  to deploy a python application 
+* This is a complete pipeline CI/CD with jenkins, ansible  to deploy battleboat application 
 * The differents stages are :
-1. Ensure lint syntax of diferents langages (bash, yaml) is OK
-2. Analyze the code with sonarqube
-3. Ensure syntax ansible is OK with ansible-lint
-4. Build image on the build server, scan it with clair and push docker image  on the dockerhub
-5. Deploy application on the preproduction and production server
-6. Ensure application is deployed
+  
+1. Analyze the code with sonarqube
+2. Ensure syntax ansible is OK with ansible-lint
+3. Build image on the build server, scan it with clair and push docker image  on the dockerhub
+4. Deploy application on the preproduction and production server
+5. Ensure application is deployed
 
 by Bertille Matchum (carolledevops@yahoo.com)
 
