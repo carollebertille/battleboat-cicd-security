@@ -47,7 +47,7 @@ pipeline {
                       expression { GIT_BRANCH == 'origin/dev' }
                    }
                    steps {
-                       sh 'ansible-playbook  -i hosts --vault-password-file vault.key --private-key id_rsa --tags "build" --limit build install_geolocation.yml'
+                       sh 'ansible-playbook  -i hosts --vault-password-file vault.key --private-key id_rsa --tags "build" --limit build battleboat.yml'
                    }
                 }
 
@@ -64,7 +64,7 @@ pipeline {
                       expression { GIT_BRANCH == 'origin/dev' }
                    }
                    steps {
-                       sh 'ansible-playbook  -i hosts --vault-password-file vault.key --private-key id_rsa --tags "push" --limit push install_geolocation.yml'
+                       sh 'ansible-playbook  -i hosts --vault-password-file vault.key --private-key id_rsa --tags "push" --limit push battleboat.yml'
                    }
                 }
                stage("Deploy application in preproduction") {
@@ -72,7 +72,7 @@ pipeline {
                       expression { GIT_BRANCH == 'origin/dev' }
                   }
                    steps {
-                       sh 'ansible-playbook  -i hosts --vault-password-file vault.key --private-key id_rsa --tags "preprod" --limit preprod install_fake-backend.yml'
+                       sh 'ansible-playbook  -i hosts --vault-password-file vault.key --private-key id_rsa --tags "preprod" --limit preprod battleboat.yml'
                    }
                 }
                stage("Ensure application is deployed in preproduction") {
@@ -111,7 +111,7 @@ pipeline {
                       expression { GIT_BRANCH == 'origin/main' }
                   }
                    steps {
-                       sh 'ansible-playbook  -i hosts --vault-password-file vault.key --private-key id_rsa --tags "prod" --limit prod install_geolocation.yml'
+                       sh 'ansible-playbook  -i hosts --vault-password-file vault.key --private-key id_rsa --tags "prod" --limit prod battleboat.yml'
                    }
                }
                stage("Ensure application is deployed in production") {
